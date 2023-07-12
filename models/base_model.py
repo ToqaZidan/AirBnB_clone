@@ -1,11 +1,8 @@
 #!/usr/bin/python3
 """
 A Super BaseModel class that defines all common
-attributes/methods for other inherited classes of 
+attributes/methods for other inherited classes of
 the HBNB project; AIRBNB clone.
-In this module it will be possible to Extracte infromation as:
-A unique universal identifier,
-
 """
 
 import uuid
@@ -25,16 +22,21 @@ class BaseModel():
         and it will be updated every time that object changes.
 
     """
-
-    def __init__(self):
+    # re-create an instance with dictionary representation.
+    def __init__(self, *args, **kwargs):
         """
         Initialize BaseModel class
         """
-
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = self.created_at
-
+        if kwargs:
+            kwargs.pop("__class__", None)
+            for key, value in kwargs.items():
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                setattr(self, key, value)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = self.created_at
 
     def save(self):
         """
