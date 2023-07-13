@@ -6,6 +6,7 @@ the HBNB project; AIRBNB clone.
 """
 
 import uuid
+import models
 from datetime import datetime
 
 
@@ -28,15 +29,19 @@ class BaseModel():
         Initialize BaseModel class
         """
         if kwargs:
-            kwargs.pop("__class__", None)
-            for key, value in kwargs.items():
-                if key == "created_at" or key == "updated_at":
-                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                setattr(self, key, value)
+            if kwargs["__class__"] == self.__class__.__name__:
+                self.id, self.created_at, self.updated_at, *_ = kwargs.values()
+                self.created_at = datetime.strptime(
+                        self.created_at, "%Y-%m-%dT%H:%M:%S.%f"
+                        )
+                self.updated_at = datetime.strptime(
+                        self.updated_at, "%Y-%m-%dT%H:%M:%S.%f"
+                        )
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = self.created_at
+            models.storage.new(self)
 
     def save(self):
         """
@@ -44,6 +49,7 @@ class BaseModel():
         'updated_at' with the current datetime
         """
         self.updated_at = datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         """
@@ -64,6 +70,4 @@ class BaseModel():
         """
         Return the string representation of the class for the user.
         """
-        return "[{}] ({}) {}".format(
-            self.__class__.__name__, self.id, self.__dict__
-            )
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
