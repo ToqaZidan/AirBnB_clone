@@ -4,6 +4,7 @@ Base class module defines all common attributes/methods for other classes
 '''
 import uuid
 from datetime import datetime
+import models
 
 
 class BaseModel():
@@ -36,6 +37,7 @@ class BaseModel():
             self.id = str(uuid.uuid4())
             self.created_at = datetime.today()
             self.updated_at = self.created_at
+            models.storage.new(self)
 
     def __str__(self):
         """Return a string representation of the BaseModel object.
@@ -52,6 +54,7 @@ class BaseModel():
             None.
         """
         self.updated_at = datetime.today()
+        models.storage.save()
 
     def to_dict(self):
         """Return a dictionary representation of the BaseModel object.
