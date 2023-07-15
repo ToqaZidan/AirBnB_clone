@@ -137,6 +137,26 @@ class HBNBCommand(cmd.Cmd):
         new_obj.__dict__.update({obj_attr: obj_val})
         new_obj.save()
 
+    def help_create(self):
+        print("Creates a new instance of a specified class.")
+        print("Usage: create <class_name>")
+        
+    def help_show(self):
+        print("Displays the details of a specified instance.")
+        print("Usage: show <class_name> <instance_id>")
+        
+    def help_destroy(self):
+        print("Deletes a specified instance.")
+        print("Usage: destroy <class_name> <instance_id>")
+        
+    def help_all(self):
+        print("Displays all instances of a specified class, or all instances if no class is specified.")
+        print("Usage: all [<class_name>]")
+        
+    def help_update(self):
+        print("Updates the attributes of a specified instance.")
+        print("Usage: update <class_name> <instance_id> <attribute_name> <attribute_value>")
+
     def do_quit(self, line):
         """Quit command to exit the program
         """
