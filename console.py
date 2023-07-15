@@ -5,6 +5,7 @@ the command-line/console interface module for hbnb system
 import cmd
 from models.base_model import BaseModel
 from models import storage
+import models
 
 
 class HBNBCommand(cmd.Cmd):
@@ -47,6 +48,31 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
         except IndexError:
             print("** class name missing **")
+
+    def do_destroy(self, line):
+        arr = line.split()
+        print(arr)
+        if len(arr) < 1:
+            print("** class name missing **")
+            return
+
+        class_name = arr[0]
+        if class_name not in globals():
+            print("** class doesn't exist **")
+            return
+
+        if len(arr) < 2:
+            print("** instance id missing **")
+            return
+
+        obj_id = arr[1]
+        key = f"{class_name}.{obj_id}"
+
+        objects = storage.all()
+        if key in objects:
+            del objects[key]
+        else:
+            print("** no instance found **")
 
     def do_quit(self, line):
         """Quit command to exit the program
