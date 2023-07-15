@@ -28,6 +28,25 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class name missing **")
 
+    def do_show(self, line):
+        arr = line.split()
+        try:
+            class_name = arr[0]
+            try:
+                if globals()[class_name]:
+                    try:
+                        class_id = arr[1]
+                        try:
+                            key = class_name + "." + class_id
+                            print(storage._FileStorage__objects[key])
+                        except KeyError:
+                            print("** no instance found **")
+                    except IndexError:
+                        print("** instance id missing **")
+            except KeyError:
+                print("** class doesn't exist **")
+        except IndexError:
+            print("** class name missing **")
 
     def do_quit(self, line):
         """Quit command to exit the program
