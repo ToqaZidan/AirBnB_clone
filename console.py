@@ -82,7 +82,7 @@ class HBNBCommand(cmd.Cmd):
         if len(arr) < 1:
             for k in objects:
                 all_list.append(str(objects[k]))
-            print (all_list)
+            print(all_list)
             return
 
         class_name = arr[0]
@@ -97,7 +97,46 @@ class HBNBCommand(cmd.Cmd):
             print(all_list)
             return
 
-    
+    def do_update(self, line):
+        arr = line.split()
+
+        if len(arr) < 1:
+            print("** class name missing **")
+            return
+
+        class_name = arr[0]
+        if class_name not in globals():
+            print("** class doesn't exist **")
+            return
+
+        if len(arr) < 2:
+            print("** instance id missing **")
+            return
+
+        obj_id = arr[1]
+        key = f"{class_name}.{obj_id}"
+
+        objects = storage.all()
+        if key not in objects:
+            print("** no instance found **")
+            return
+
+        if len(arr) < 3:
+            print("** attribute name missing **")
+            return
+
+        obj_attr = arr[2]
+
+        if len(arr) < 4:
+            print("** value missing **")
+            return
+
+        obj_val = arr[3]
+
+        new_obj = storage.all()[key]
+        new_obj.__dict__.update({obj_attr: obj_val})
+        new_obj.save()
+
     def do_quit(self, line):
         """Quit command to exit the program
         """
