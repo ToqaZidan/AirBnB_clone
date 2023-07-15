@@ -70,7 +70,17 @@ class FileStorage:
                 obj_dict = json.load(file)
                 for key, value in obj_dict.items():
                     class_name, obj_id = key.split('.')
-                    obj = globals()[class_name](**value)
-                    self.__objects[key] = obj
+                    classes = {
+                        "BaseModel": BaseModel,
+                        "Amenity": Amenity,
+                        "City": City,
+                        "Place": Place,
+                        "Review": Review,
+                        "State": State,
+                        "User": User
+                    }
+                    if class_name in classes:
+                        obj = classes[class_name](**value)
+                        self.__objects[key] = obj
         except FileNotFoundError:
             pass
