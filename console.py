@@ -51,7 +51,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, line):
         arr = line.split()
-        print(arr)
+
         if len(arr) < 1:
             print("** class name missing **")
             return
@@ -74,6 +74,30 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** no instance found **")
 
+    def do_all(self, line):
+        arr = line.split()
+        objects = storage.all()
+        all_list = []
+
+        if len(arr) < 1:
+            for k in objects:
+                all_list.append(str(objects[k]))
+            print (all_list)
+            return
+
+        class_name = arr[0]
+        if class_name not in globals():
+            print("** class doesn't exist **")
+            return
+
+        if len(arr) < 2:
+            for k in objects:
+                if class_name in k:
+                    all_list.append(str(objects[k]))
+            print(all_list)
+            return
+
+    
     def do_quit(self, line):
         """Quit command to exit the program
         """
