@@ -3,6 +3,8 @@
 the command-line/console interface module for hbnb system
 """
 import cmd
+from models.base_model import BaseModel
+from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -14,6 +16,18 @@ class HBNBCommand(cmd.Cmd):
     """
 
     prompt = "(hbnb) "
+
+    def do_create(self, class_name):
+        if class_name:
+            try:
+                obj = globals()[class_name]()
+                obj.save
+                print(obj.id)
+            except KeyError:
+                print("** class doesn't exist **")
+        else:
+            print("** class name missing **")
+
 
     def do_quit(self, line):
         """Quit command to exit the program
