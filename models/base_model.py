@@ -27,6 +27,13 @@ class BaseModel():
     def __init__(self, *args, **kwargs):
         """
         Initialize BaseModel class
+
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            None.
         """
         if kwargs:
             if kwargs["__class__"] == self.__class__.__name__:
@@ -47,18 +54,23 @@ class BaseModel():
         """
         Updates the public instance attribute
         'updated_at' with the current datetime
+
+         Returns:
+            None.
         """
         self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
         """
-        Returns a dictionary representation of
-        the object's attributes.
+        Returns a dictionary representation of the object's attributes.
         Copies the instance's __dict__ and
         adds the __class__ key with the class name.
         'created_at' and 'updated_at'converted to string object in ISO:
             format: %Y-%m-%dT%H:%M:%S.%f (ex: 2017-06-14T22:31:03.285259)
+
+         Returns:
+            dict: A dictionary representation of the BaseModel object.
         """
         obj_dict = self.__dict__.copy()
         obj_dict['__class__'] = self.__class__.__name__
@@ -69,5 +81,8 @@ class BaseModel():
     def __str__(self):
         """
         Return the string representation of the class for the user.
+
+        Returns:
+            str: A string representation of the BaseModel object.
         """
         return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
