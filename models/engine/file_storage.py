@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-
+"""
+File Storage Module
+This module is in charge of the storage of the classes
+"""
 import json
 from models.base_model import BaseModel
 from models.amenity import Amenity
@@ -27,7 +30,6 @@ class FileStorage:
 
     __file_path = "file.json"
     __objects = {}
-
 
     def all(self):
         """

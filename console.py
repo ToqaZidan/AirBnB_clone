@@ -16,7 +16,6 @@ from models.review import Review
 import sys
 
 
-
 class HBNBCommand(cmd.Cmd):
     """
     A command-line interface for managing objects in
