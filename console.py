@@ -238,12 +238,14 @@ class HBNBCommand(cmd.Cmd):
         obj_attr = arr[2]
         new_obj = storage.all()[key]
 
-        if isinstance(eval(obj_attr), dict):
-            for k, v in eval(obj_attr).items():
-                print(k, v)
-                new_obj.__dict__.update({k: v})
-            new_obj.save()
-            return
+        try:
+            if isinstance(eval(obj_attr), dict):
+                for k, v in eval(obj_attr).items():
+                    new_obj.__dict__.update({k: v})
+                new_obj.save()
+                return
+        except Exception:
+            pass
 
         if len(arr) < 4:
             print("** value missing **")
