@@ -25,6 +25,11 @@ class HBNBCommand(cmd.Cmd):
         if not sys.__stdin__.isatty():
             print('(hbnb)')
 
+    def postloop(self):
+        """Prints if isatty is false"""
+        if not sys.__stdin__.isatty():
+            print('(hbnb)')
+
     def do_create(self, class_name):
         """
         Creates a new instance of a specified class.
@@ -210,6 +215,7 @@ class HBNBCommand(cmd.Cmd):
         Usage:
             Ctrl+D
         """
+        print()
         return True
 
     def emptyline(self):
