@@ -6,6 +6,7 @@ import cmd
 from models.base_model import BaseModel
 from models import storage
 import models
+import sys
 
 
 class HBNBCommand(cmd.Cmd):
@@ -17,7 +18,12 @@ class HBNBCommand(cmd.Cmd):
         prompt (str): The prompt string displayed to the user.
     """
 
-    prompt = "(hbnb) "
+    prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
+
+    def preloop(self):
+        """Prints if isatty is false"""
+        if not sys.__stdin__.isatty():
+            print('(hbnb)')
 
     def do_create(self, class_name):
         """
