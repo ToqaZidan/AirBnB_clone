@@ -14,6 +14,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 import sys
+import re
 
 
 class HBNBCommand(cmd.Cmd):
@@ -31,6 +32,23 @@ class HBNBCommand(cmd.Cmd):
         """Prints if isatty is false"""
         if not sys.__stdin__.isatty():
             print('(hbnb)')
+
+    def precmd(self, line):
+        
+        if not ('.' in line and '(' in line and ')' in line):
+            return line
+
+        pattern = r'^(\w*)\.(\w+)\("?([\w-]*)"?\)$'
+        
+        match = re.match(pattern, line)
+        if match:
+            class_name = match.group(1)
+            command = match.group(2)
+            id = match.group(3)
+            print(f"class_name={class_name}, command={command}, id={id}")
+            return f"{command} {class_name} {id}"
+        else:
+            return line
 
     def postloop(self):
         """Prints if isatty is false"""
