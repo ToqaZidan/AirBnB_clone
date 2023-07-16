@@ -3,19 +3,18 @@
 This module contains the command-line/console interface for the HBNB system.
 """
 import cmd
+from datetime import datetime
 from models.base_model import BaseModel
 from models import storage
-<<<<<<< HEAD
+import models
 from models.user import User
 from models.place import Place
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-=======
-import models
 import sys
->>>>>>> 24388bff88cd339a6f5cbe5124fdbd96a9b46638
+
 
 
 class HBNBCommand(cmd.Cmd):
