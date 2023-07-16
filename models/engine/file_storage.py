@@ -28,20 +28,8 @@ class FileStorage:
             by their class name and id.
     """
 
-    def __init__(self):
-        """initialize file storage"""
-        self.__file_path = "file.json"
-        self.__objects = {}
-
-        try:
-            with open(self.__file_path, 'r') as file:
-                data = file.read()
-                if data:
-                    self.__objects = json.loads(data)
-        except FileNotFoundError:
-            pass
-        except json.JSONDecodeError:
-            print("Error: Invalid JSON data in file.json")
+    __file_path = "file.json"
+    __objects = {}
 
     def all(self):
         """
@@ -67,30 +55,25 @@ class FileStorage:
         Serializes the objects stored in the __objects dictionary
         and saves them to a JSON file.
         """
-        try:
-            obj_dict = {}
-            for key, value in self.__objects.items():
-                obj_dict[key] = value.to_dict()
+        obj_dict = {}
+        for key, value in self.__objects.items():
+            obj_dict[key] = value.to_dict()
 
-            with open(self.__file_path, 'w') as file:
-                json.dump(obj_dict, file)
-        except Exception as e:
-            print(f"Error: Failed to save data to file.json: {e}")
+        with open(self.__file_path, 'w') as file:
+            json.dump(obj_dict, file)
 
     def reload(self):
         """
-        Deserializes the JSON file to __objects (only if the JSON file exists).
+        Deserializes the objects from the JSON file and stores
+        them in the __objects dictionary.
+        If the JSON file does not exist, no exception is raised.
         """
         try:
             with open(self.__file_path, 'r') as file:
-                if file.read().strip() != "":
-                    file.seek(0)  # Reset the file pointer to the beginning
-                    obj_dict = json.load(file)
-                    for key, value in obj_dict.items():
-                        cls_name = key.split(".")[0]
-                        obj = models.classes[cls_name](**value)
-                        self.__objects[key] = obj
+                obj_dict = json.load(file)
+                for key, value in obj_dict.items():
+                    class_name, obj_id = key.split('.')
+                    obj = globals()[class_name](**value)
+                    self.__objects[key] = obj
         except FileNotFoundError:
-            pass  # Ignore the error if the file doesn't exist
-        except Exception as e:
-            print(f"Error: Failed to reload data from file.json: {e}")
+            pass
