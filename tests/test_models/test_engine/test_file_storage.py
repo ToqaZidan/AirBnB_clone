@@ -1,8 +1,17 @@
 #!/usr/bin/python3
 """ Module for testing file storage"""
 import unittest
+import json
 from models.base_model import BaseModel
 from models import storage
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
+from models import storage
+from os import path
 
 
 class TestFileStorage(unittest.TestCase):
@@ -63,6 +72,50 @@ class TestFileStorage(unittest.TestCase):
         for key in storage.all().keys():
             temp = key
         self.assertEqual(temp, 'BaseModel' + '.' + _id)
+
+    def test_all_returns_dict(self):
+        """ all() returns a dictionary """
+        result = self.storage.all()
+        self.assertIsInstance(result, dict)
+
+    def test_all_returns_correct_dict(self):
+        """ all() returns the correct dictionary """
+        obj1 = BaseModel()
+        obj2 = Amenity()
+        self.storage.new(obj1)
+        self.storage.new(obj2)
+        result = self.storage.all()
+        self.assertIn(f"{obj1.__class__.__name__}.{obj1.id}", result)
+        self.assertIn(f"{obj2.__class__.__name__}.{obj2.id}", result)
+
+    def test_save_file_exists(self):
+        """ save() creates the file """
+        self.storage.save()
+        self.assertTrue(path.exists(self.storage._FileStorage__file_path))
+
+    def test_reload_file_not_found(self):
+        """ reload() doesn't raise an exception if file not found """
+        self.storage.reload()
+        # No assertion needed, test passes if no exception is raised
+
+    def test_reload_file_exists(self):
+        """ reload() loads objects from existing file """
+        obj = BaseModel()
+        self.storage.new(obj)
+        self.storage.save()
+        self.storage.reload()
+        result = self.storage.all()
+        self.assertIn(f"{obj.__class__.__name__}.{obj.id}", result)
+
+    def test_reload_deserialization(self):
+        """ reload() correctly deserializes objects """
+        obj = BaseModel()
+        obj_dict = obj.to_dict()
+        self.storage.new(obj)
+        self.storage.save()
+        self.storage.reload()
+        result = self.storage.all()
+        self.assertEqual(obj_dict, result[f"{obj.__class__.__name__}.{obj.id}"].to_dict())
 
 
 if __name__ == "__main__":
