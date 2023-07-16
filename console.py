@@ -67,7 +67,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         class_name = args[0]
-        if not hasattr(models, class_name):
+        if class_name not in globals():
             print("** class doesn't exist **")
             return
 
@@ -76,8 +76,8 @@ class HBNBCommand(cmd.Cmd):
             return
 
         obj_id = args[1]
-        key = "{}.{}".format(class_name, obj_id)
-        objects = models.storage.all()
+        key = f"{class_name}.{obj_id}"
+        objects = storage.all()
         if key in objects:
             print(objects[key])
         else:
