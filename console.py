@@ -15,6 +15,7 @@ from models.amenity import Amenity
 from models.review import Review
 import sys
 import re
+import json
 
 
 class HBNBCommand(cmd.Cmd):
@@ -48,7 +49,7 @@ class HBNBCommand(cmd.Cmd):
             return line
 
         pattern = (r'^(\w*)\.(\w+)\("?([\w-]*)"?,?'
-                   r' ?"?([\w-]*)"?,? ?"?([\w-]*)"?\)$')
+                   r' ?"?(\{?[\w ,\"\':-]*\}?)"?\}?,? ?"?([\w-]*)"?\)$')
 
         match = re.match(pattern, line)
         if match:
@@ -57,6 +58,17 @@ class HBNBCommand(cmd.Cmd):
             id = match.group(3)
             attr_name = match.group(4)
             attr_value = match.group(5)
+
+            # find if string is a dictionary
+            try:
+                if isinstance(eval(attr_name), dict):
+                    new_str = ''
+                    for i in attr_name:
+                        if i != ' ':
+                            new_str += i
+                    attr_name = new_str
+            except Exception:
+                pass
             return f"{command} {class_name} {id} {attr_name} {attr_value}"
         else:
             return line
@@ -224,6 +236,14 @@ class HBNBCommand(cmd.Cmd):
             return
 
         obj_attr = arr[2]
+        new_obj = storage.all()[key]
+
+        if isinstance(eval(obj_attr), dict):
+            for k, v in eval(obj_attr).items():
+                print(k, v)
+                new_obj.__dict__.update({k: v})
+            new_obj.save()
+            return
 
         if len(arr) < 4:
             print("** value missing **")
@@ -234,7 +254,6 @@ class HBNBCommand(cmd.Cmd):
             obj_val = obj_val[1:-1]
         obj_val = obj_val.replace('\\"', '"')
 
-        new_obj = storage.all()[key]
         new_obj.__dict__.update({obj_attr: obj_val})
         new_obj.save()
 
