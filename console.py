@@ -5,12 +5,17 @@ This module contains the command-line/console interface for the HBNB system.
 import cmd
 from models.base_model import BaseModel
 from models import storage
+<<<<<<< HEAD
 from models.user import User
 from models.place import Place
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+=======
+import models
+import sys
+>>>>>>> 24388bff88cd339a6f5cbe5124fdbd96a9b46638
 
 
 class HBNBCommand(cmd.Cmd):
@@ -22,7 +27,17 @@ class HBNBCommand(cmd.Cmd):
         prompt (str): The prompt string displayed to the user.
     """
 
-    prompt = "(hbnb) "
+    prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
+
+    def preloop(self):
+        """Prints if isatty is false"""
+        if not sys.__stdin__.isatty():
+            print('(hbnb)')
+
+    def postloop(self):
+        """Prints if isatty is false"""
+        if not sys.__stdin__.isatty():
+            print('(hbnb)')
 
     def do_create(self, class_name):
         """
@@ -55,24 +70,27 @@ class HBNBCommand(cmd.Cmd):
         Usage:
             show <class_name> <instance_id>
         """
-        arr = line.split()
-        try:
-            class_name = arr[0]
-            try:
-                if globals()[class_name]:
-                    try:
-                        class_id = arr[1]
-                        try:
-                            key = class_name + "." + class_id
-                            print(storage._FileStorage__objects[key])
-                        except KeyError:
-                            print("** no instance found **")
-                    except IndexError:
-                        print("** instance id missing **")
-            except KeyError:
-                print("** class doesn't exist **")
-        except IndexError:
+        args = line.split()
+        if len(args) < 1:
             print("** class name missing **")
+            return
+
+        class_name = args[0]
+        if class_name not in globals():
+            print("** class doesn't exist **")
+            return
+
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        obj_id = args[1]
+        key = f"{class_name}.{obj_id}"
+        objects = storage.all()
+        if key in objects:
+            print(objects[key])
+        else:
+            print("** no instance found **")
 
     def do_destroy(self, line):
         """
@@ -209,6 +227,7 @@ class HBNBCommand(cmd.Cmd):
         Usage:
             Ctrl+D
         """
+        print()
         return True
 
     def emptyline(self):
