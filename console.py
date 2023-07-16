@@ -61,24 +61,27 @@ class HBNBCommand(cmd.Cmd):
         Usage:
             show <class_name> <instance_id>
         """
-        arr = line.split()
-        try:
-            class_name = arr[0]
-            try:
-                if globals()[class_name]:
-                    try:
-                        class_id = arr[1]
-                        try:
-                            key = class_name + "." + class_id
-                            print(storage._FileStorage__objects[key])
-                        except KeyError:
-                            print("** no instance found **")
-                    except IndexError:
-                        print("** instance id missing **")
-            except KeyError:
-                print("** class doesn't exist **")
-        except IndexError:
+        args = line.split()
+        if len(args) < 1:
             print("** class name missing **")
+            return
+
+        class_name = args[0]
+        if not hasattr(models, class_name):
+            print("** class doesn't exist **")
+            return
+
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        obj_id = args[1]
+        key = "{}.{}".format(class_name, obj_id)
+        objects = models.storage.all()
+        if key in objects:
+            print(objects[key])
+        else:
+            print("** no instance found **")
 
     def do_destroy(self, line):
         """
