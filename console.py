@@ -34,19 +34,30 @@ class HBNBCommand(cmd.Cmd):
             print('(hbnb)')
 
     def precmd(self, line):
-        
+        """
+        Parses command line input and converts it to a standard format.
+
+        Args:
+            line (str): The command line input.
+
+        Returns:
+            str: The standardized command line input, or the original input
+            if it does not match the expected format.
+        """
         if not ('.' in line and '(' in line and ')' in line):
             return line
 
-        pattern = r'^(\w*)\.(\w+)\("?([\w-]*)"?\)$'
-        
+        pattern = (r'^(\w*)\.(\w+)\("?([\w-]*)"?,?'
+                   r' ?"?([\w-]*)"?,? ?"?([\w-]*)"?\)$')
+
         match = re.match(pattern, line)
         if match:
             class_name = match.group(1)
             command = match.group(2)
             id = match.group(3)
-            print(f"class_name={class_name}, command={command}, id={id}")
-            return f"{command} {class_name} {id}"
+            attr_name = match.group(4)
+            attr_value = match.group(5)
+            return f"{command} {class_name} {id} {attr_name} {attr_value}"
         else:
             return line
 
@@ -227,6 +238,38 @@ class HBNBCommand(cmd.Cmd):
         new_obj.__dict__.update({obj_attr: obj_val})
         new_obj.save()
 
+    def do_count(self, line):
+        """
+        Counts the number of instances of a specified class.
+
+        Args:
+            line (str): The command line input.
+
+        Usage:
+            count <class_name>
+
+        Returns:
+            None
+        """
+        arr = line.split()
+        objects = storage.all()
+        count = 0
+
+        if len(arr) < 1:
+            print("** class name missing **")
+            return
+
+        class_name = arr[0]
+        if class_name not in globals():
+            print("** class doesn't exist **")
+            return
+
+        for k in objects:
+            if class_name in k:
+                count += 1
+        print(count)
+        return
+
     def do_quit(self, line):
         """
         Exits the program.
@@ -287,6 +330,13 @@ class HBNBCommand(cmd.Cmd):
         """
         print("Updates the attributes of a specified instance.")
         print("Usage: update <cls name> <id> <attr name> <attr value>")
+
+    def help_count(self):
+        """
+        Displays help information for the update command.
+        """
+        print("Counts the number of instances of a specified class.")
+        print("Usage: count <class_name>")
 
 
 if __name__ == '__main__':
