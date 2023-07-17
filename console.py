@@ -161,9 +161,11 @@ class HBNBCommand(cmd.Cmd):
 
         objects = storage.all()
         if key in objects:
-            del objects[key]
+            del storage.all()[key]
+            storage.save()
         else:
             print("** no instance found **")
+            return
 
     def do_all(self, line):
         """
