@@ -83,3 +83,57 @@
 	font-style: normal;
 	margin-left: 6px;
 }
+
+article div.amenities {
+	margin-top: 40px;
+	margin-bottom: 5px;
+}
+
+article div.amenities ul{
+	margin: 1rem 0;
+}
+article div.amenities ul li {
+	display: flex;
+	align-items: center;
+	margin: 5px 0;
+
+}
+
+article div.amenities h2 {
+	border-bottom: 1px solid #DDDDDD;
+	font-size: 16px;
+	padding: 5px 0;
+	text-align: left;
+}
+
+article div.amenities li img {
+	width: 22px;
+	margin: 0 15px 0 1px;
+}
+
+
+.reviews {
+	margin-top: 40px;
+}
+
+
+article div.reviews h2 {
+	font-size: 16px;
+	border-bottom: 1px solid #DDDDDD;
+	padding: 5px 0;
+	text-align: left;
+}
+
+article div.reviews ul li {
+	list-style: none;
+	margin: 10px 0;
+}
+
+article div.reviews ul li h3{
+	font-size: 14px;
+}
+
+
+article div.reviews ul li p{
+	font-size: 12px;
+}
