@@ -60,6 +60,7 @@ button:hover{
 	justify-content: center;
 	position: absolute;
 	width: 100%;
+	max-width: 300px;
 	top: 100%;
 	background-color: #FAFAFA;
 	border: 1px solid #DDDDDD;
@@ -95,4 +96,29 @@ button:hover{
 
 .locations:hover > .popover{
 	display: block;
+}
+
+@media screen and (max-width:500px) {
+	header {
+		background-position: center; 
+	}
+	.filters {
+		height: fit-content;
+		flex-direction: column;
+		position: relative;
+	}
+
+	button {
+		position: static;
+		justify-content: center;
+		align-items: center;
+		transform: translateY(0);
+		margin: 15px 10%;
+	}
+	.filters div{
+		width: 100%;
+		box-sizing: border-box;
+		padding: 15px;
+		border-bottom: 1px solid #DDDDDD;
+	}
 }
